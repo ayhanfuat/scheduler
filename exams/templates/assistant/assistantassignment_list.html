@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block viewport %}
+{% endblock %}
+
+{% block content %}
+<script src="https://use.fontawesome.com/9aaebe1c75.js"></script>
+
+
+
+
+
+<div class="row">
+  <div class="col-xs-0 col-sm-0 col-md-0 col-lg-2"></div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+
+
+
+    <h1 class='text-center'>{{ object_list.first.assistant.user.first_name }} {{ object_list.first.assistant.user.last_name }}     <a class="btn btn-dark float-right" href={% url "assistant-print" slug=object_list.first.assistant.slug  %}>
+        <i> PDF</i> <a class='text-white' href={% url "assistant-print" slug=object_list.first.assistant.slug %}></a>
+ </h1>
+    <div id="accordion" role="tablist" aria-multiselectable="true">
+
+      {% for record in object_list %}
+
+      <div class="card ">
+        <div class="card-header bg-secondary" role="tab" id="headingOne">
+          <h4 class="mb-0">
+        <a  class=" btn-secondary" data-toggle="collapse" data-parent="#accordion" href="#{{record.id}}" aria-expanded="true" aria-controls="{{record.id}}">
+          {{ record.sitting.exam.offering.course.code }}  {{ record.sitting.exam.offering.course.name }} <a class="float-right text-white">{{ record.sitting.exam.timetable.session.time|date:"D - H:i"}}</a></a>
+
+      </h4>
+        </div>
+        <div id="{{record.id}}" class="collapse {% if closest_id == record.id %}show{% endif %} bg-light" role="tabpanel" aria-labelledby="headingOne">
+          <div class="card-body ">
+            <h1 class="card-title">{{ record.sitting.exam.timetable.session.time|date:"d M Y - H:i, D"}}</h1>
+            <h2>Instructor: {{ record.sitting.exam.offering.instructor_in_charge.name }}</h2>
+            <h2 class=''>Department: {{ record.sitting.exam.offering.department.name_en }}</h2>
+            <h2 class=''>Number of students: {{record.sitting.layout_set.count}}</a></h2>
+            <h2 class=''>Classroom: {{ record.sitting.classroom.name }}</h2>
+            <h2 class=''>Assistants:
+          {% for assistants in record.sitting.assistantassignment_set.all %}
+          {% if not forloop.first %} - {% endif %}
+          {% if not assistants.active %}  <strike>  {% endif %} {{ assistants.assistant.user.first_name}} {{ assistants.assistant.user.last_name}}{% if not assistants.active %}</strike>  (Cancelled) {% endif %}
+          {% endfor %}</h2> {% if forloop.last %} {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+
+</div>
+
+{% endblock %}

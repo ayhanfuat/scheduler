@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/datatables.min.css"/>
+
+<h1 class='display-4 text-center'>
+
+    {{ object_list.first.classroom.name }}
+
+</h1>
+
+
+<table id="classroom_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+<thead>
+<tr>
+<th>Exam Date</th>
+<th>Course Title</th>
+<th>Instructor</th>
+<th>Department</th>
+<th>Number of students</th>
+<th>Assistants</th>
+</tr>
+</thead>
+<tbody>
+{% for sitting in object_list %}
+<tr>
+  <td>{{ sitting.exam.timetable.session.time|date:"d M Y - H:i, D" }} </td>
+  <td>{{ sitting.exam.offering.course.code }} {{ exam.offering.course.name }}</td>
+  <td>{{ sitting.exam.offering.instructor_in_charge.name }}</td>
+  <td>{{ sitting.exam.offering.department.name_en }}</td>
+  <td>{{ sitting.layout_set.count }}</td>
+  <td>{% for assistant in sitting.assistants.all %} {{ assistant.user.first_name }} {{ assistant.user.last_name }} {% endfor %}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/datatables.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+var oTable = $('#classroom_table').dataTable({
+"ordering": false,
+dom : 'lftpB',
+buttons: [
+
+  {
+      extend: 'pdfHtml5',
+      text: 'Generate PDF file',
+  }],
+});
+});
+
+document.title = 'Classroom  {{ object_list.first.name }}'
+</script>
+
+
+<a class="nav-link text-center" href="{% url 'classroom' %}">Go back</a>
+
+
+{% endblock %}

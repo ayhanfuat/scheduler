@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/datatables.min.css"/>
+
+
+
+
+<table id="course_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Exam Date</th>
+      <th>Course Title</th>
+      <th>Instructor</th>
+      <th>Department</th>
+      <th>Section</th>
+      <th>Classrooms</th>
+    </tr>
+  </thead>
+    <tbody>
+          {% for exam in object_list %}
+      <tr>
+        <td>{{ exam.timetable.session.time|date:"d M Y - H:i, D" }} </td>
+        <td>{{ exam.offering.course.code }} {{ exam.offering.course.name }}</td>
+        <td>{{ exam.offering.instructor_in_charge.name }}</td>
+        <td>{{ exam.offering.department.name_en }}</td>
+        <td>{{ exam.offering.section }}</td>
+        <td>{% for sitting in exam.sitting_set.all|dictsort:"classroom.name" %} {{ sitting.classroom.name }} {% endfor %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+</table>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/datatables.min.js"></script>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    var oTable = $('#course_table').dataTable({
+      "bPaginate": false,
+      "ordering": false,
+    dom : 'ft',
+    });
+  });
+</script>
+
+<a class="nav-link text-center" href="{% url 'course' %}">Go back</a>
+
+
+{% endblock %}

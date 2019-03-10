@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<style media="screen">
+.select2-choices {
+min-height: 200px;
+max-height: 150px;
+overflow-y: auto;
+}
+</style>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+<div class="container">
+
+  <div class="alert alert-danger" role="alert">
+    <strong>Important:</strong> Your student number could not be found in the system. Please check your number again. If your number is correct, it is quite likely that you are an Erasmus student or did a late registration. If that's the case, use the following box to check the classrooms assigned for each course. If that's not the case, please enter your <a href="{% url 'student' %}">student number again</a>. 
+  </div>
+
+  <form class="form-signin" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+
+
+  </form>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+  $('.form-control').select2();
+});
+</script>
+
+{% endblock %}

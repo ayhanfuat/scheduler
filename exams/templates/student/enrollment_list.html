@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/datatables.min.css" />
+
+
+{% if object_list %}
+
+<h2 class='text-center'>
+  {{ object_list.first.student.user.username }} - {{ object_list.first.student.user.first_name }} {{ object_list.first.student.user.last_name }}
+  <div class="dropdown show float-right">
+    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Change Exam Period
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <a class="dropdown-item" href={% url 'enrollment-list' student_number=object_list.first.student.user.username period="midterm" %}>Midterm</a>
+      <a class="dropdown-item" href={% url 'enrollment-list' student_number=object_list.first.student.user.username period="final" %}>Final</a>
+      <a class="dropdown-item" href={% url 'enrollment-list' student_number=object_list.first.student.user.username period="resit" %}>Resit</a>
+    </div>
+  </div>
+</h2>
+
+{% endif %}
+
+<table id="student_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th>Exam Date</th>
+      <th>Course Title</th>
+      <th>Instructor</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for er in object_list %}
+    <tr>
+      <td>{{ er.exam.timetable.session.time|date:"d M Y - H:i, D" }}</td>
+      <td>{{ er.exam.offering.course.code }} {{ er.exam.offering.course.name }}</td>
+      <td>{{ er.exam.offering.instructor_in_charge.name }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/datatables.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    var oTable = $('#student_table').dataTable({
+      "bPaginate": false,
+      "ordering": false,
+      dom: 't',
+    });
+    document.title = '{{ object_list.first.student.user.username }} - {{ object_list.first.student.user.first_name }} {{ object_list.first.student.user.last_name }}'
+  });
+</script>
+
+{% endblock %}
