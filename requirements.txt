@@ -5,7 +5,7 @@ docloud==1.0.257
 docplex==2.4.61
 numpy==1.16.2
 pandas==0.23.1
-Pillow==5.4.1
+Pillow==6.2.0
 psycopg2==2.7.7
 PuLP==1.6.9
 pyparsing==2.3.1
