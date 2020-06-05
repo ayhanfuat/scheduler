@@ -1,6 +1,6 @@
 certifi==2017.7.27.1
 cplex==12.8.0.0
-Django==2.1.7
+Django==2.2.13
 docloud==1.0.257
 docplex==2.4.61
 numpy==1.16.2
